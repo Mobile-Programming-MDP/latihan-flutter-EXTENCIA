@@ -42,10 +42,10 @@ class DetailScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const SizedBox(height: 16,)
+              const SizedBox(height: 16,),
               Text(candi.name)
             ],
-          ),)
+          ),),
         Text(candi.name),
         Text(candi.description),
 

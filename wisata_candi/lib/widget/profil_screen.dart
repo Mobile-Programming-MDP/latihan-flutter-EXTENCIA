@@ -1,4 +1,4 @@
-import 'package:wisata_candi/profile_info_item.dart';
+import 'package:wisata_candi/widget/profile_info_item.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {

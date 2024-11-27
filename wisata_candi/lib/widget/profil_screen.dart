@@ -1,5 +1,6 @@
-import 'package:wisata_candi/widget/profile_info_item.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wisata_candi/widget/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,21 +10,27 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isSignedIn = false;
-  String fullName = '';
-  String userName = '';
+  //TODO 1: Deklarasikan variabel yg dibutuhkan
+  bool isSignedIn = true;
+  String fullName = "Nur Rachmat";
+  String username = "nurrachmat";
   int favoriteCandiCount = 0;
 
+  //TODO 5 : Fungsi SignIn
   void signIn() {
-    setState(() {
-      isSignedIn = !isSignedIn;
-    });
+    // setState(() {
+    //   isSignedIn = !isSignedIn;
+    // });
+    Navigator.pushNamed(context, '/signin');
   }
 
-  void signOut() {
+  //TODO 6 : Fungsi SignOut
+  void signOut() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       isSignedIn = !isSignedIn;
     });
+    prefs.setBool('isSignedIn', false);
   }
 
   @override
@@ -40,6 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
+                //TODO 2: Buat bagian ProfileHeader berisi gambar
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
@@ -49,76 +57,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Container(
                           decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Colors.deepPurple, width: 2),
-                            shape: BoxShape.circle,
-                          ),
-                          child: CircleAvatar(
+                              border: Border.all(
+                                  color: Colors.deepPurple, width: 2),
+                              shape: BoxShape.circle),
+                          child: const CircleAvatar(
                             radius: 50,
                             backgroundImage:
-                                AssetImage('images/placeholder_image.jpg'),
+                                AssetImage("images/placeholder_image.png"),
                           ),
                         ),
                         if (isSignedIn)
                           IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.camera_alt,
-                                color: Colors.deepPurple[50],
-                              )),
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: Colors.deepPurple[50],
+                            ),
+                          )
                       ],
                     ),
                   ),
                 ),
+                //TODO 3: Buat bagian ProfileInfo
+                //row username /pengguna
                 const SizedBox(height: 20),
                 Divider(color: Colors.deepPurple[100]),
-                const SizedBox(
-                  height: 4,
-                ),
+                const SizedBox(height: 4),
                 ProfileInfoItem(
-                    icon: Icons.lock,
-                    label: 'Pengguna',
-                    value: userName,
-                    iconColor: Colors.amber),
+                  icon: Icons.lock,
+                  label: "Pengguna",
+                  value: username,
+                  iconColor: Colors.amber,
+                ),
+                //row nama
                 const SizedBox(height: 4),
                 Divider(color: Colors.deepPurple[100]),
-                const SizedBox(
-                  height: 4,
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: const Row(
+                        children: [
+                          Icon(Icons.person, color: Colors.blue),
+                          SizedBox(width: 8),
+                          Text(
+                            'Nama',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        ': $fullName',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                    if (isSignedIn) const Icon(Icons.edit),
+                  ],
                 ),
-                ProfileInfoItem(
-                    icon: Icons.person,
-                    label: 'Nama',
-                    value: fullName,
-                    showEditIcon: isSignedIn,
-                    onEditPressed: () {
-                      debugPrint('Icon edit ditekan...');
-                    },
-                    iconColor: Colors.blue),
+                //row favorit
                 const SizedBox(height: 4),
                 Divider(color: Colors.deepPurple[100]),
-                const SizedBox(
-                  height: 4,
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: const Row(
+                        children: [
+                          Icon(Icons.favorite, color: Colors.red),
+                          SizedBox(width: 8),
+                          Text(
+                            'Favorit',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        ': $favoriteCandiCount',
+                        style: const TextStyle(fontSize: 18),
+                      ),
+                    ),
+                  ],
                 ),
-                ProfileInfoItem(
-                    icon: Icons.favorite,
-                    label: 'Favorit',
-                    value: favoriteCandiCount > 0 ? '$favoriteCandiCount' : '0',
-                    iconColor: Colors.red),
-                SizedBox(
-                  height: 4,
-                ),
-                Divider(
-                  color: Colors.deepPurple[100],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                //TODO 4: Buat bagian profile action
+                const SizedBox(height: 4),
+                Divider(color: Colors.deepPurple[100]),
+                const SizedBox(height: 20),
                 isSignedIn
-                    ? TextButton(onPressed: signOut, child: Text('Sign Out'))
-                    : TextButton(onPressed: signIn, child: Text('Sign In'))
+                    ? TextButton(
+                        onPressed: signOut, child: const Text('Sign Out'))
+                    : TextButton(
+                        onPressed: signIn, child: const Text('Sign In'))
               ],
             ),
-          ),
+          )
         ],
       ),
     );
